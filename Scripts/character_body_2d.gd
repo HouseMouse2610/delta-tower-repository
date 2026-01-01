@@ -7,7 +7,7 @@ extends CharacterBody2D
 @export var ACCELERATION : float = 1000.0
 @export var FRICTION : float = 1200.0
 @export var GRAVITY : int = 650
-@export var JUMP_FORCE : int = 200
+@export var JUMP_FORCE : int = 225
 @export var HEAD_NUDGE_SPEED : float = 50.0 
 
 var was_on_floor : bool = false

@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://cj2yykbfe8uc7"]
+[gd_scene load_steps=35 format=3 uid="uid://cj2yykbfe8uc7"]
 
 [ext_resource type="Script" uid="uid://tc16l3ja280u" path="res://Scripts/character_body_2d.gd" id="1_88kja"]
 [ext_resource type="Texture2D" uid="uid://bt01tk0k2lef7" path="res://Sprites/Sprite Knight Character Godot.png" id="2_it8n0"]
@@ -63,11 +63,15 @@ region = Rect2(32, 192, 32, 32)
 atlas = ExtResource("2_it8n0")
 region = Rect2(64, 192, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_op2xg"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_it8n0"]
 atlas = ExtResource("2_it8n0")
 region = Rect2(0, 96, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_1nvmp"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_gbyq6"]
+atlas = ExtResource("2_it8n0")
+region = Rect2(32, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_88kja"]
 atlas = ExtResource("2_it8n0")
 region = Rect2(32, 96, 32, 32)
 
@@ -183,10 +187,52 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_op2xg")
+"texture": SubResource("AtlasTexture_it8n0")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_1nvmp")
+"texture": SubResource("AtlasTexture_gbyq6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_88kja")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_88kja")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_88kja")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_88kja")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_88kja")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_88kja")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_88kja")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_88kja")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_88kja")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_88kja")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_88kja")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_88kja")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_88kja")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_88kja")
 }],
 "loop": false,
 "name": &"Fall",
@@ -252,9 +298,10 @@ script = ExtResource("1_88kja")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_opb2v")
-animation = &"Attack_Idle"
+animation = &"Fall"
 autoplay = "Idle"
-frame_progress = 0.21333432
+frame = 1
+frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-0.5, 1)
@@ -262,7 +309,6 @@ shape = SubResource("RectangleShape2D_mrm6q")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(5, 5)
-position_smoothing_enabled = true
 
 [node name="CoyoteTimer" type="Timer" parent="."]
 wait_time = 0.1
