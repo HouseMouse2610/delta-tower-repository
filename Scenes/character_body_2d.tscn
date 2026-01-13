@@ -290,24 +290,24 @@ animations = [{
 "speed": 10.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_mrm6q"]
-size = Vector2(7, 14)
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_88kja"]
+radius = 3.5
+height = 14.0
 
 [node name="CharacterBody2D" type="CharacterBody2D"]
 script = ExtResource("1_88kja")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_opb2v")
-animation = &"Fall"
+animation = &"Idle"
 autoplay = "Idle"
-frame = 1
-frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-0.5, 1)
-shape = SubResource("RectangleShape2D_mrm6q")
+shape = SubResource("CapsuleShape2D_88kja")
 
 [node name="Camera2D" type="Camera2D" parent="."]
+visible = false
 zoom = Vector2(5, 5)
 
 [node name="CoyoteTimer" type="Timer" parent="."]
@@ -318,42 +318,12 @@ one_shot = true
 wait_time = 0.12
 one_shot = true
 
-[node name="Left_HeadNudge" type="RayCast2D" parent="."]
-position = Vector2(-4, -6)
-target_position = Vector2(0, -2)
-hit_from_inside = true
+[node name="RayLeft" type="RayCast2D" parent="."]
+visible = false
+position = Vector2(-4, -8)
+target_position = Vector2(0, -9)
 
-[node name="Left_HeadNudge2" type="RayCast2D" parent="."]
-position = Vector2(-2, -6)
-target_position = Vector2(0, -2)
-hit_from_inside = true
-
-[node name="Right_HeadNudge" type="RayCast2D" parent="."]
-position = Vector2(3, -6)
-target_position = Vector2(0, -2)
-hit_from_inside = true
-
-[node name="Right_HeadNudge2" type="RayCast2D" parent="."]
-position = Vector2(1, -6)
-target_position = Vector2(0, -2)
-hit_from_inside = true
-
-[node name="Right_LedgeHop" type="RayCast2D" parent="."]
-position = Vector2(3, 7)
-target_position = Vector2(2, 0)
-hit_from_inside = true
-
-[node name="Right_LedgeHop2" type="RayCast2D" parent="."]
-position = Vector2(3, 3)
-target_position = Vector2(2, 0)
-hit_from_inside = true
-
-[node name="Left_LedgeHop" type="RayCast2D" parent="."]
-position = Vector2(-4, 7)
-target_position = Vector2(-2, 0)
-hit_from_inside = true
-
-[node name="Left_LedgeHop2" type="RayCast2D" parent="."]
-position = Vector2(-4, 3)
-target_position = Vector2(-2, 0)
-hit_from_inside = true
+[node name="RayRight" type="RayCast2D" parent="."]
+visible = false
+position = Vector2(3, -8)
+target_position = Vector2(0, -9)
