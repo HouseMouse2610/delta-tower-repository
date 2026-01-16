@@ -5,7 +5,7 @@
 
 [node name="Node2D" type="Node2D"]
 
-[node name="CharacterBody2D" parent="." instance=ExtResource("1_v1qfn")]
+[node name="Player" parent="." instance=ExtResource("1_v1qfn")]
 position = Vector2(0, 8)
 
 [node name="Tileset Node" parent="." instance=ExtResource("2_v1qfn")]
