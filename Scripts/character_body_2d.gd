@@ -5,6 +5,8 @@ extends CharacterBody2D
 @onready var ray_left = $RayLeft
 @onready var ray_right = $RayRight
 @onready var attack_hitbox = $AttackArea/CollisionAttack
+@onready var attack_sound = $AttackSound
+
 
 
 @export var SPEED : float = 80.0
@@ -116,6 +118,9 @@ func _physics_process(delta):
 		velocity.x = 0
 		is_attack = true
 		toggle_hitbox(false)
+		attack_sound.pitch_scale = randf_range(0.85, 1.15)
+		attack_sound.play()
+		
 		$AnimatedSprite2D.play("Attack")
 		if not is_on_floor():
 			if air_attack_count < 1:

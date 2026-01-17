@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://deqxat20mrfml"
+path="res://.godot/imported/Delta Tower Arena Theme Godot.wav-15f82a97684d72357497033320459f67.sample"
+
+[deps]
+
+source_file="res://Sound Assets/Music Assets/Delta Tower Arena Theme Godot.wav"
+dest_files=["res://.godot/imported/Delta Tower Arena Theme Godot.wav-15f82a97684d72357497033320459f67.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2
