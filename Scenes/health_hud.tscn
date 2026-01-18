@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://bthcv6b6b646o"]
+
+[node name="Health HUD" type="CanvasLayer"]
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Control"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0

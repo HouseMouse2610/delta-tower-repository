@@ -6,6 +6,8 @@ extends CharacterBody2D
 @onready var ray_right = $RayRight
 @onready var attack_hitbox = $AttackArea/CollisionAttack
 @onready var attack_sound = $AttackSound
+@onready var attack_timer = $AttackTimer
+@onready var attack_buffer_timer = $AttackBufferTimer
 
 
 
@@ -37,15 +39,15 @@ func _physics_process(delta):
 	var direction = 0
 	
 	if not is_attack or not is_on_floor():
-		direction = Input.get_axis("Left", "Right") # Diz que Left é negativo e Right é positivo
+		direction = Input.get_axis("Left", "Right") 
 		
 		
 		
 	
 		if direction != 0:
-			# Caso a Direção seja diferente de 0,ele vai se mover horizontalmente, em que Left se torna X negativo e right se torna  X positivoo
+			
 			velocity.x = move_toward(velocity.x, direction * SPEED, ACCELERATION * delta)
-			if is_on_floor(): $AnimatedSprite2D.play("Run") # Caso esteja no chão, equanto se move horizontalmente aplicará a animação run
+			if is_on_floor(): $AnimatedSprite2D.play("Run") 
 		
 			if direction > 0:
 				$AttackArea.position.x = abs($AttackArea.position.x)  
@@ -55,12 +57,12 @@ func _physics_process(delta):
 		
 		
 		else:
-			# Caso direction for igual a 0 e estiver no chão, aplicará a animação Idle
+			
 			velocity.x = move_toward(velocity.x, 0, FRICTION * delta)
 			if is_on_floor(): $AnimatedSprite2D.play("Idle")
 	
 		if direction != 0:
-		# Caso a direction for diferente e menor que 0, vira ao contrário
+		
 			$AnimatedSprite2D.flip_h = (direction < 0)
 	
 	
@@ -73,7 +75,7 @@ func _physics_process(delta):
 		
 		var current_gravity = GRAVITY
 		
-		# Caso não estiver no chão, a posição y será somada a gravidade * delta(por segundo), portanto, a gravidade puxa para baixo
+		
 		if velocity.y > 0:
 			current_gravity = GRAVITY * FALL_GRAVITY_MULTIPLIER
 		
@@ -86,11 +88,11 @@ func _physics_process(delta):
 		
 		
 		if was_on_floor and velocity.y >= 0:
-			# Caso não estiver no chão e a velocidade y for maior ou igual a 0, o coyotetimer começa
+			
 			CoyoteTimer.start()
 		
 		if velocity.y > 0 and not is_attack:
-			# Caso a velocidade y for maior que 0, aplica a animação fall
+			
 			$AnimatedSprite2D.play("Fall")
 		
 
@@ -98,12 +100,12 @@ func _physics_process(delta):
 	# --- LÓGICA DE PULO ---
 	
 	if Input.is_action_just_pressed("Jump"):
-		# Caso o input Jump for precionado, o jumpbuffertimer começa
+		
 		JumpBufferTimer.start()
 	
 	
 	if JumpBufferTimer.time_left > 0 and (is_on_floor() or CoyoteTimer.time_left > 0) and not is_attack:
-		# Caso o jogador ainda possa pular, a jump force será negativa, e portanto irá para cima, além de aplicar a animação de pulo e encerrar os cronometros
+		 
 		velocity.y = -JUMP_FORCE
 		$AnimatedSprite2D.play("Jump")
 		JumpBufferTimer.stop()
@@ -114,21 +116,34 @@ func _physics_process(delta):
 	
 	
 	
-	if Input.is_action_just_pressed("Attack") and not is_attack:
+	
+	
+	
+	
+	# --- LÓGICA DE ATAQUE ---
+	
+	if Input.is_action_just_pressed("Attack"):
+		attack_buffer_timer.start()
+		
+	if attack_buffer_timer.time_left > 0 and not is_attack and (is_on_floor() or air_attack_count < 1) :
+		attack_buffer_timer.stop()
 		velocity.x = 0
 		is_attack = true
+		attack_timer.start()
 		toggle_hitbox(false)
-		attack_sound.pitch_scale = randf_range(0.85, 1.15)
+		attack_sound.pitch_scale = randf_range(0.9, 1.1)
 		attack_sound.play()
 		
-		$AnimatedSprite2D.play("Attack")
-		if not is_on_floor():
+		
+		
+		if not is_on_floor() or velocity.y != 0:
 			if air_attack_count < 1:
-			
+				
 				velocity.y = -150
 				air_attack_count += 1
-			
 			$AnimatedSprite2D.play("Air Attack")
+		else:
+					$AnimatedSprite2D.play("Attack")
 			
 			
 			
@@ -148,6 +163,10 @@ func _physics_process(delta):
 	if is_on_floor():
 		air_attack_count = 0
 		
+	
+	
+	
+	
 	
 	move_and_slide()
 	
@@ -181,9 +200,6 @@ func toggle_hitbox(valor: bool):
 		attack_hitbox.set_deferred("disabled", valor)
 
 
-
-func _on_animated_sprite_2d_animation_finished() -> void:
-	if $AnimatedSprite2D.animation == "Attack" or $AnimatedSprite2D.animation == "Air Attack": is_attack = false
-	
+func _on_attack_timer_timeout() -> void:
 	is_attack = false
 	toggle_hitbox(true) 
