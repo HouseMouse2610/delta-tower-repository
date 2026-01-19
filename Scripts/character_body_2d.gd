@@ -19,62 +19,53 @@ extends CharacterBody2D
 @export var JUMP_FORCE : int = 225
 @export var HEAD_NUDGE_SPEED : float = 50.0 
 @export var air_attack_count : int = 0
-
-
-
+@export var max_health : float = 10.0 
+@export var current_health : float = 10.0 # Ajustado para começar cheio
 
 var was_on_floor : bool = false
 var is_attack : bool = false
 
+func _ready():
+	# Removidas as chamadas de HUD aqui
+	pass
 
-
-
-
-
+func take_damage(amount: float):
+	current_health -= amount
+	current_health = clamp(current_health, 0, max_health)
+	# A atualização do HUD será reinserida aqui no futuro
+	
+	if current_health <= 0:
+		print("faleceu")
 
 func _physics_process(delta):
 	
 	# --- LÓGICA DE MOVIMENTAÇÃO HORIZONTAL ---
-	
 	var direction = 0
 	
 	if not is_attack or not is_on_floor():
 		direction = Input.get_axis("Left", "Right") 
 		
-		
-		
-	
 		if direction != 0:
-			
 			velocity.x = move_toward(velocity.x, direction * SPEED, ACCELERATION * delta)
-			if is_on_floor(): $AnimatedSprite2D.play("Run") 
+			if is_on_floor(): $PlayerAnimation.play("Run") 
 		
 			if direction > 0:
 				$AttackArea.position.x = abs($AttackArea.position.x)  
 			elif direction < 0:
 				$AttackArea.position.x = -abs($AttackArea.position.x) 
 		
-		
-		
 		else:
-			
 			velocity.x = move_toward(velocity.x, 0, FRICTION * delta)
-			if is_on_floor(): $AnimatedSprite2D.play("Idle")
+			if is_on_floor(): $PlayerAnimation.play("Idle")
 	
 		if direction != 0:
-		
-			$AnimatedSprite2D.flip_h = (direction < 0)
+			$PlayerAnimation.flip_h = (direction < 0)
+	
 	
 	
 	# --- LÓGICA DE GRAVIDADE ---
-	
 	if not is_on_floor():
-		
-		
-		
-		
 		var current_gravity = GRAVITY
-		
 		
 		if velocity.y > 0:
 			current_gravity = GRAVITY * FALL_GRAVITY_MULTIPLIER
@@ -84,44 +75,26 @@ func _physics_process(delta):
 		
 		velocity.y += current_gravity * delta
 		
-		
-		
-		
 		if was_on_floor and velocity.y >= 0:
-			
 			CoyoteTimer.start()
 		
 		if velocity.y > 0 and not is_attack:
-			
-			$AnimatedSprite2D.play("Fall")
+			$PlayerAnimation.play("Fall")
 		
-
-	
 	# --- LÓGICA DE PULO ---
-	
 	if Input.is_action_just_pressed("Jump"):
-		
 		JumpBufferTimer.start()
 	
-	
 	if JumpBufferTimer.time_left > 0 and (is_on_floor() or CoyoteTimer.time_left > 0) and not is_attack:
-		 
 		velocity.y = -JUMP_FORCE
-		$AnimatedSprite2D.play("Jump")
+		$PlayerAnimation.play("Jump")
 		JumpBufferTimer.stop()
 		CoyoteTimer.stop()
 	
 	if Input.is_action_just_released("Jump") and velocity.y < 0:
 		velocity.y *= 0.5
 	
-	
-	
-	
-	
-	
-	
 	# --- LÓGICA DE ATAQUE ---
-	
 	if Input.is_action_just_pressed("Attack"):
 		attack_buffer_timer.start()
 		
@@ -134,28 +107,14 @@ func _physics_process(delta):
 		attack_sound.pitch_scale = randf_range(0.9, 1.1)
 		attack_sound.play()
 		
-		
-		
 		if not is_on_floor() or velocity.y != 0:
 			if air_attack_count < 1:
-				
 				velocity.y = -150
 				air_attack_count += 1
-			$AnimatedSprite2D.play("Air Attack")
+			$PlayerAnimation.play("Air Attack")
 		else:
-					$AnimatedSprite2D.play("Attack")
+			$PlayerAnimation.play("Attack")
 			
-			
-			
-			
-			
-		
-		
-	
-	
-	
-	
-	
 	if is_on_ceiling() and velocity.y < 0:
 		handle_head_nudge()
 	was_on_floor = is_on_floor()
@@ -163,43 +122,23 @@ func _physics_process(delta):
 	if is_on_floor():
 		air_attack_count = 0
 		
-	
-	
-	
-	
-	
 	move_and_slide()
 	
-	
 func handle_head_nudge():
-	
-	
-	
-	
-		velocity.y = 0 
-	
-	
-	
-	
-		var _left_hit = ray_left.is_colliding()
-		var _right_hit = ray_right.is_colliding()
-	
-		if _left_hit and not _right_hit:
-			global_position.x += 200.0
-			velocity.x = HEAD_NUDGE_SPEED
-	
-		elif _right_hit and not _left_hit:
-			global_position.x -= 200.0
-			velocity.x = -HEAD_NUDGE_SPEED
-	
+	velocity.y = 0 
+	var _left_hit = ray_left.is_colliding()
+	var _right_hit = ray_right.is_colliding()
 
-
+	if _left_hit and not _right_hit:
+		global_position.x += 200.0
+		velocity.x = HEAD_NUDGE_SPEED
+	elif _right_hit and not _left_hit:
+		global_position.x -= 200.0
+		velocity.x = -HEAD_NUDGE_SPEED
 
 func toggle_hitbox(valor: bool):
-		
-		attack_hitbox.set_deferred("disabled", valor)
-
+	attack_hitbox.set_deferred("disabled", valor)
 
 func _on_attack_timer_timeout() -> void:
 	is_attack = false
-	toggle_hitbox(true) 
+	toggle_hitbox(true)

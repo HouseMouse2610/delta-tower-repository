@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bt01tk0k2lef7"
-path="res://.godot/imported/Sprite Knight Character Godot.png-e3110d272e8cb8ef37c1f4828d24b0eb.ctex"
+uid="uid://bnfnue5kuiufv"
+path="res://.godot/imported/Sprite Hollow Health Conteiner Delta Tower.png-f842073f259cd00f78a5efca56f6a899.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Sprite Knight Character Godot.png"
-dest_files=["res://.godot/imported/Sprite Knight Character Godot.png-e3110d272e8cb8ef37c1f4828d24b0eb.ctex"]
+source_file="res://Sprites/Player Sprites/Health HUD/Sprite Hollow Health Conteiner Delta Tower.png"
+dest_files=["res://.godot/imported/Sprite Hollow Health Conteiner Delta Tower.png-f842073f259cd00f78a5efca56f6a899.ctex"]
 
 [params]
 

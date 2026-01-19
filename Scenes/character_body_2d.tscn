@@ -1,9 +1,10 @@
-[gd_scene load_steps=92 format=3 uid="uid://cj2yykbfe8uc7"]
+[gd_scene load_steps=93 format=3 uid="uid://cj2yykbfe8uc7"]
 
 [ext_resource type="Script" uid="uid://tc16l3ja280u" path="res://Scripts/character_body_2d.gd" id="1_88kja"]
-[ext_resource type="Texture2D" uid="uid://d0mg1wx4uwoat" path="res://Sprites/Sprite Knight Character Godot 2.png" id="2_gbyq6"]
-[ext_resource type="Texture2D" uid="uid://bt01tk0k2lef7" path="res://Sprites/Sprite Knight Character Godot.png" id="2_it8n0"]
+[ext_resource type="Texture2D" uid="uid://d0mg1wx4uwoat" path="res://Sprites/Player Sprites/Player/Sprite Knight Character Godot 2.png" id="2_gbyq6"]
+[ext_resource type="Texture2D" uid="uid://bt01tk0k2lef7" path="res://Sprites/Player Sprites/Player/Sprite Knight Character Godot.png" id="2_it8n0"]
 [ext_resource type="AudioStream" uid="uid://pkaisjrxpftf" path="res://Sound Assets/Sound Effect Assets/Slash Sound Effect3.wav" id="4_gbyq6"]
+[ext_resource type="PackedScene" uid="uid://bthcv6b6b646o" path="res://Scenes/health_hud.tscn" id="5_pbq55"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pbq55"]
 atlas = ExtResource("2_gbyq6")
@@ -700,7 +701,7 @@ size = Vector2(19, 23)
 [node name="CharacterBody2D" type="CharacterBody2D"]
 script = ExtResource("1_88kja")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="PlayerAnimation" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_opb2v")
 animation = &"Fall"
 autoplay = "Idle"
@@ -746,5 +747,7 @@ disabled = true
 
 [node name="AttackSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_gbyq6")
+
+[node name="CanvasLayer" parent="." instance=ExtResource("5_pbq55")]
 
 [connection signal="timeout" from="AttackTimer" to="." method="_on_attack_timer_timeout"]

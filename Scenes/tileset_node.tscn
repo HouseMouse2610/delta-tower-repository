@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=4 uid="uid://bslu1267yjkem"]
 
-[ext_resource type="Texture2D" uid="uid://ko7ebp2uvs3o" path="res://Sprites/Sprite TileSet Delta Tower Godot.png" id="1_k67dk"]
+[ext_resource type="Texture2D" uid="uid://ko7ebp2uvs3o" path="res://Sprites/Other Sprites/Sprite TileSet Delta Tower Godot.png" id="1_k67dk"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hh5uf"]
 texture = ExtResource("1_k67dk")
