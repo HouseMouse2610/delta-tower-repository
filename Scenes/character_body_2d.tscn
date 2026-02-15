@@ -1,4 +1,4 @@
-[gd_scene load_steps=92 format=3 uid="uid://cj2yykbfe8uc7"]
+[gd_scene format=3 uid="uid://cj2yykbfe8uc7"]
 
 [ext_resource type="Script" uid="uid://tc16l3ja280u" path="res://Scripts/character_body_2d.gd" id="1_88kja"]
 [ext_resource type="Texture2D" uid="uid://d0mg1wx4uwoat" path="res://Sprites/Player Sprites/Player/Sprite Knight Character Godot 2.png" id="2_gbyq6"]
@@ -132,10 +132,6 @@ region = Rect2(96, 96, 32, 32)
 [sub_resource type="AtlasTexture" id="AtlasTexture_5btdc"]
 atlas = ExtResource("2_gbyq6")
 region = Rect2(128, 96, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_jol5s"]
-atlas = ExtResource("2_gbyq6")
-region = Rect2(160, 96, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8f6q8"]
 atlas = ExtResource("2_gbyq6")
@@ -464,9 +460,6 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_5btdc")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_jol5s")
 }],
 "loop": false,
 "name": &"Double Jump",
@@ -697,54 +690,51 @@ height = 14.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_it8n0"]
 size = Vector2(19, 23)
 
-[node name="CharacterBody2D" type="CharacterBody2D"]
+[node name="CharacterBody2D" type="CharacterBody2D" unique_id=1906971917]
 script = ExtResource("1_88kja")
 
-[node name="PlayerAnimation" type="AnimatedSprite2D" parent="."]
+[node name="PlayerAnimation" type="AnimatedSprite2D" parent="." unique_id=1786979554]
 sprite_frames = SubResource("SpriteFrames_opb2v")
-animation = &"Fall"
+animation = &"Run"
 autoplay = "Idle"
 
-[node name="CollisionPlayer" type="CollisionShape2D" parent="."]
+[node name="CollisionPlayer" type="CollisionShape2D" parent="." unique_id=448109105]
 position = Vector2(-0.5, 1)
 shape = SubResource("CapsuleShape2D_88kja")
 
-[node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(5, 5)
-
-[node name="CoyoteTimer" type="Timer" parent="."]
+[node name="CoyoteTimer" type="Timer" parent="." unique_id=2025324437]
 wait_time = 0.1
 one_shot = true
 
-[node name="JumpBufferTimer" type="Timer" parent="."]
+[node name="JumpBufferTimer" type="Timer" parent="." unique_id=239377594]
 wait_time = 0.12
 one_shot = true
 
-[node name="AttackTimer" type="Timer" parent="."]
+[node name="AttackTimer" type="Timer" parent="." unique_id=101795759]
 wait_time = 0.4
 one_shot = true
 
-[node name="AttackBufferTimer" type="Timer" parent="."]
+[node name="AttackBufferTimer" type="Timer" parent="." unique_id=2011398167]
 wait_time = 0.2
 one_shot = true
 
-[node name="RayLeft" type="RayCast2D" parent="."]
+[node name="RayLeft" type="RayCast2D" parent="." unique_id=73810450]
 position = Vector2(-2, -7)
 target_position = Vector2(0, -2)
 
-[node name="RayRight" type="RayCast2D" parent="."]
+[node name="RayRight" type="RayCast2D" parent="." unique_id=1565303824]
 position = Vector2(1, -7)
 target_position = Vector2(0, -2)
 
-[node name="AttackArea" type="Area2D" parent="."]
+[node name="AttackArea" type="Area2D" parent="." unique_id=2070024522]
 position = Vector2(10, 0)
 
-[node name="CollisionAttack" type="CollisionShape2D" parent="AttackArea"]
+[node name="CollisionAttack" type="CollisionShape2D" parent="AttackArea" unique_id=1196064530]
 position = Vector2(-0.5, -0.5)
 shape = SubResource("RectangleShape2D_it8n0")
 disabled = true
 
-[node name="AttackSound" type="AudioStreamPlayer2D" parent="."]
+[node name="AttackSound" type="AudioStreamPlayer2D" parent="." unique_id=1173813647]
 stream = ExtResource("4_gbyq6")
 
 [connection signal="timeout" from="AttackTimer" to="." method="_on_attack_timer_timeout"]
