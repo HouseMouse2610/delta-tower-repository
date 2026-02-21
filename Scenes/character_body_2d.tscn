@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://cj2yykbfe8uc7"]
 
 [ext_resource type="Script" uid="uid://tc16l3ja280u" path="res://Scripts/character_body_2d.gd" id="1_88kja"]
-[ext_resource type="Texture2D" uid="uid://d0mg1wx4uwoat" path="res://Sprites/Player Sprites/Player/Sprite Knight Character Godot 2.png" id="2_gbyq6"]
-[ext_resource type="Texture2D" uid="uid://bt01tk0k2lef7" path="res://Sprites/Player Sprites/Player/Sprite Knight Character Godot.png" id="2_it8n0"]
-[ext_resource type="AudioStream" uid="uid://pkaisjrxpftf" path="res://Sound Assets/Sound Effect Assets/Slash Sound Effect3.wav" id="4_gbyq6"]
+[ext_resource type="Texture2D" uid="uid://d0mg1wx4uwoat" path="res://Assets/Sprite Assets/Player Sprites/Player Animations/Sprite Knight Character Godot 2.png" id="2_gbyq6"]
+[ext_resource type="Texture2D" uid="uid://bt01tk0k2lef7" path="res://Assets/Sprite Assets/Player Sprites/Player Animations/Sprite Knight Character Godot.png" id="2_it8n0"]
+[ext_resource type="AudioStream" uid="uid://pkaisjrxpftf" path="res://Assets/Sound Assets/Sound Effect Assets/Slash Sound Effect3.wav" id="4_gbyq6"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pbq55"]
 atlas = ExtResource("2_gbyq6")
@@ -703,6 +703,7 @@ position = Vector2(-0.5, 1)
 shape = SubResource("CapsuleShape2D_88kja")
 
 [node name="CoyoteTimer" type="Timer" parent="." unique_id=2025324437]
+process_callback = 0
 wait_time = 0.1
 one_shot = true
 

@@ -12,24 +12,14 @@ script = ExtResource("4_u7krg")
 [node name="Node2D" type="Node2D" unique_id=250771284]
 
 [node name="Player" parent="." unique_id=300032359 instance=ExtResource("1_v1qfn")]
-position = Vector2(0, 8)
-SPEED = null
-ACCELERATION = null
-FRICTION = null
-GRAVITY = null
-FALL_GRAVITY_MULTIPLIER = null
-JUMP_FORCE = null
-HEAD_NUDGE_SPEED = null
-air_attack_count = null
-max_health = null
-current_health = null
+position = Vector2(0, -8)
 
 [node name="Tileset Node" parent="." unique_id=1381621078 instance=ExtResource("2_v1qfn")]
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1092405659]
 physics_interpolation_mode = 1
 top_level = true
-position = Vector2(0, 8)
+position = Vector2(0, -8)
 zoom = Vector2(5, 5)
 process_callback = 0
 drag_horizontal_enabled = true
@@ -43,7 +33,7 @@ metadata/_custom_type_script = "uid://bd046eokvcnu2"
 
 [node name="PhantomCamera2D" type="Node2D" parent="." unique_id=2067695929 node_paths=PackedStringArray("follow_target")]
 top_level = true
-position = Vector2(0, 8)
+position = Vector2(0, -8)
 script = ExtResource("3_6whob")
 priority = 1
 follow_mode = 2

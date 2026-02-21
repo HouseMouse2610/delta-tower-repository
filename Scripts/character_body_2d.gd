@@ -50,11 +50,11 @@ func take_damage(amount: float):
 
 # -------------------- PHYSICS --------------------
 func _physics_process(delta):
+	move_and_slide()
 	logica_de_movimentacao_horizontal(delta)
 	logica_de_ataque()
 	logica_de_gravidade(delta)
 	logica_de_pulo()
-	move_and_slide()
 	atualizar_visual()
 	aplicar_squash_stretch()
 	was_on_floor = is_on_floor()
@@ -82,9 +82,8 @@ func logica_de_movimentacao_horizontal(_delta):
 		return
 
 func logica_de_gravidade(_delta):
-	if was_on_floor and not is_on_floor() and velocity.y > 0:
+	if was_on_floor and not is_on_floor() and velocity.y >= 0:
 		CoyoteTimer.start()
-		print("deu certo")
 	if not is_on_floor():
 		if velocity.y > 0:
 			velocity.y += GRAVITY * FALL_GRAVITY_MULTIPLIER * _delta
@@ -93,27 +92,30 @@ func logica_de_gravidade(_delta):
 	else:
 		velocity.y = 0
 		max_jump_number = 0
+		CoyoteTimer.stop()
 
 func logica_de_pulo():
 	# ---------------- INPUT BUFFER ----------------
 	if Input.is_action_just_pressed("Jump"):
 		JumpBufferTimer.start()
-		max_jump_number += 1
-		CoyoteTimer.stop()
+		
 
 	# ---------------- JUMP ----------------
-	if not JumpBufferTimer.is_stopped() and not is_attack and max_jump_number < 1:
-		if is_on_floor() or not CoyoteTimer.is_stopped():
-			velocity.y = -JUMP_FORCE
+	if not JumpBufferTimer.is_stopped() and not is_attack:
+		if max_jump_number < 1:
+			if is_on_floor() or not CoyoteTimer.is_stopped():
+				velocity.y = -JUMP_FORCE
+				max_jump_number += 1
 
-			is_attack = false
-			attack_timer.stop()
-			toggle_hitbox(true)
+				is_attack = false
+				attack_timer.stop()
+				toggle_hitbox(true)
 
-			sprite.scale = Vector2(0.8, 1.2)
-			create_tween().tween_property(sprite, "scale", Vector2.ONE, 0.15)
+				sprite.scale = Vector2(0.8, 1.2)
+				create_tween().tween_property(sprite, "scale", Vector2.ONE, 0.15)
 
-			JumpBufferTimer.stop()
+				CoyoteTimer.stop()
+				JumpBufferTimer.stop()
 
 	# ---------------- SHORT HOP ----------------
 	if Input.is_action_just_released("Jump") and velocity.y < 0:
@@ -130,13 +132,18 @@ func logica_de_ataque():
 	# ---------------- EXECUTAR ATAQUE ----------------
 	if not attack_buffer_timer.is_stopped() and not is_attack:
 		if is_on_floor():
+			attack_sound.pitch_scale = randf_range(0.9, 1.1)
+			attack_sound.play()
 			is_attack = true
 			attack_timer.start()
 			attack_buffer_timer.stop()
 			toggle_hitbox(false)
 			velocity.x = 0
+			
 		
 		elif air_attack_count < 1:
+			attack_sound.pitch_scale = randf_range(0.9, 1.1)
+			attack_sound.play()
 			is_attack = true
 			attack_timer.start()
 			attack_buffer_timer.stop()
@@ -166,10 +173,13 @@ func aplicar_squash_stretch():
 
 func atualizar_visual():
 	if is_attack:
-		if is_on_floor():
-			sprite.play("Attack")
-		elif not is_on_floor():
-			sprite.play("Air Attack")
+		if is_on_floor() and sprite.animation == "Air Attack":
+			is_attack = false
+		else:
+			if is_on_floor():
+				sprite.play("Attack")
+			else:
+				sprite.play("Air Attack")
 		return
 
 	if not is_on_floor():
