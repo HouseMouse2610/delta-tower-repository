@@ -24,11 +24,13 @@ extends CharacterBody2D
 @export var max_health : float = 10.0
 @export var current_health : float = 10.0
 @export var max_jump_number : int = 1
+@export var DASH_FORCE : int = 300
 
 # -------------------- STATE VARIABLES --------------------
 var was_on_floor : bool = false
 var is_attack : bool = false
-var have_dash : bool = false
+var is_dash : bool = false
+var have_dash : bool = true
 var have_double_jump : bool = false
 var have_down_attack : bool = false
 
@@ -55,6 +57,7 @@ func _physics_process(delta):
 	logica_de_ataque()
 	logica_de_gravidade(delta)
 	logica_de_pulo()
+	lógica_de_dash()
 	atualizar_visual()
 	aplicar_squash_stretch()
 	was_on_floor = is_on_floor()
@@ -138,7 +141,8 @@ func logica_de_ataque():
 			attack_timer.start()
 			attack_buffer_timer.stop()
 			toggle_hitbox(false)
-			velocity.x = 0
+			if not is_dash:
+				velocity.x = 0
 			
 		
 		elif air_attack_count < 1:
@@ -172,14 +176,18 @@ func aplicar_squash_stretch():
 		create_tween().tween_property(sprite, "scale", Vector2.ONE, 0.1)
 
 func atualizar_visual():
+	if is_dash:
+		sprite.play("Dash")
 	if is_attack:
 		if is_on_floor() and sprite.animation == "Air Attack":
 			is_attack = false
 		else:
 			if is_on_floor():
 				sprite.play("Attack")
-			else:
+			elif not is_on_floor() and not is_dash:
 				sprite.play("Air Attack")
+			elif is_dash:
+				sprite.play("Dash")
 		return
 
 	if not is_on_floor():
@@ -193,3 +201,19 @@ func atualizar_visual():
 		sprite.play("Run")
 	else:
 		sprite.play("Idle")
+
+func lógica_de_dash():
+	var direcao = Input.get_axis("Left", "Right")
+	
+	if have_dash:
+		
+		if Input.is_action_just_pressed("Dash"):
+			is_dash = true
+			
+			if direcao > 0:
+				velocity.x = DASH_FORCE
+			elif direcao < 0:
+				velocity.x = -DASH_FORCE
+			
+			if sprite.animation_finished:
+				is_dash = false
