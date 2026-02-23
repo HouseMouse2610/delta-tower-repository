@@ -429,7 +429,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"Dash",
-"speed": 15.0
+"speed": 20.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -695,7 +695,7 @@ script = ExtResource("1_88kja")
 
 [node name="PlayerAnimation" type="AnimatedSprite2D" parent="." unique_id=1786979554]
 sprite_frames = SubResource("SpriteFrames_opb2v")
-animation = &"Run"
+animation = &"Air Attack"
 autoplay = "Idle"
 
 [node name="CollisionPlayer" type="CollisionShape2D" parent="." unique_id=448109105]
@@ -719,13 +719,9 @@ one_shot = true
 wait_time = 0.2
 one_shot = true
 
-[node name="RayLeft" type="RayCast2D" parent="." unique_id=73810450]
-position = Vector2(-2, -7)
-target_position = Vector2(0, -2)
-
-[node name="RayRight" type="RayCast2D" parent="." unique_id=1565303824]
-position = Vector2(1, -7)
-target_position = Vector2(0, -2)
+[node name="DashTimer" type="Timer" parent="." unique_id=1281381793]
+wait_time = 0.5
+one_shot = true
 
 [node name="AttackArea" type="Area2D" parent="." unique_id=2070024522]
 position = Vector2(10, 0)
@@ -738,4 +734,5 @@ disabled = true
 [node name="AttackSound" type="AudioStreamPlayer2D" parent="." unique_id=1173813647]
 stream = ExtResource("4_gbyq6")
 
+[connection signal="animation_finished" from="PlayerAnimation" to="." method="_on_player_animation_animation_finished"]
 [connection signal="timeout" from="AttackTimer" to="." method="_on_attack_timer_timeout"]
