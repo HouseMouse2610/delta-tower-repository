@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://tc16l3ja280u" path="res://Scripts/character_body_2d.gd" id="1_88kja"]
 [ext_resource type="Texture2D" uid="uid://d0mg1wx4uwoat" path="res://Assets/Sprite Assets/Player Sprites/Player Animations/Sprite Knight Character Godot 2.png" id="2_gbyq6"]
 [ext_resource type="Texture2D" uid="uid://bt01tk0k2lef7" path="res://Assets/Sprite Assets/Player Sprites/Player Animations/Sprite Knight Character Godot.png" id="2_it8n0"]
+[ext_resource type="Texture2D" uid="uid://ti4mf8ikr8xh" path="res://Assets/Sprite Assets/Player Sprites/Player Animations/Sprite Knight Character Godot 3.png" id="3_pbq55"]
 [ext_resource type="AudioStream" uid="uid://pkaisjrxpftf" path="res://Assets/Sound Assets/Sound Effect Assets/Slash Sound Effect3.wav" id="4_gbyq6"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pbq55"]
@@ -38,36 +39,60 @@ atlas = ExtResource("2_gbyq6")
 region = Rect2(224, 32, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8ldn0"]
-atlas = ExtResource("2_gbyq6")
+atlas = ExtResource("3_pbq55")
 region = Rect2(0, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_o8di4"]
-atlas = ExtResource("2_gbyq6")
+atlas = ExtResource("3_pbq55")
 region = Rect2(32, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3d168"]
-atlas = ExtResource("2_gbyq6")
+atlas = ExtResource("3_pbq55")
 region = Rect2(64, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_q07ms"]
-atlas = ExtResource("2_gbyq6")
+atlas = ExtResource("3_pbq55")
 region = Rect2(96, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_x0qg5"]
-atlas = ExtResource("2_gbyq6")
+atlas = ExtResource("3_pbq55")
 region = Rect2(128, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_l447x"]
-atlas = ExtResource("2_gbyq6")
+atlas = ExtResource("3_pbq55")
 region = Rect2(160, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_u736u"]
-atlas = ExtResource("2_gbyq6")
+atlas = ExtResource("3_pbq55")
 region = Rect2(192, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_glyrq"]
-atlas = ExtResource("2_gbyq6")
-region = Rect2(224, 0, 32, 32)
+atlas = ExtResource("3_pbq55")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jol5s"]
+atlas = ExtResource("3_pbq55")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_srk6g"]
+atlas = ExtResource("3_pbq55")
+region = Rect2(64, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3s42t"]
+atlas = ExtResource("3_pbq55")
+region = Rect2(96, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jo48n"]
+atlas = ExtResource("3_pbq55")
+region = Rect2(128, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_om00c"]
+atlas = ExtResource("3_pbq55")
+region = Rect2(160, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jcb3v"]
+atlas = ExtResource("3_pbq55")
+region = Rect2(192, 32, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_85gyg"]
 atlas = ExtResource("2_it8n0")
@@ -389,12 +414,35 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_u736u")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_glyrq")
 }],
 "loop": false,
-"name": &"Attack",
+"name": &"Attack 1",
+"speed": 20.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_glyrq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jol5s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_srk6g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3s42t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jo48n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_om00c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jcb3v")
+}],
+"loop": false,
+"name": &"Attack 2",
 "speed": 20.0
 }, {
 "frames": [{
@@ -688,14 +736,14 @@ radius = 2.5
 height = 14.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_it8n0"]
-size = Vector2(19, 23)
+size = Vector2(15, 23)
 
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=1906971917]
 script = ExtResource("1_88kja")
 
 [node name="PlayerAnimation" type="AnimatedSprite2D" parent="." unique_id=1786979554]
 sprite_frames = SubResource("SpriteFrames_opb2v")
-animation = &"Dash"
+animation = &"Idle"
 autoplay = "Idle"
 
 [node name="CollisionPlayer" type="CollisionShape2D" parent="." unique_id=448109105]
@@ -708,7 +756,7 @@ wait_time = 0.1
 one_shot = true
 
 [node name="AttackTimer" type="Timer" parent="." unique_id=101795759]
-wait_time = 0.4
+wait_time = 0.32
 one_shot = true
 
 [node name="DashTimer" type="Timer" parent="." unique_id=1281381793]

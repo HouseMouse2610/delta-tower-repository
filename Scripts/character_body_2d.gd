@@ -26,6 +26,7 @@ var attack_buffer_counter : float = 0
 @export var current_health : float = 10.0
 @export var max_jump_number : int = 1
 @export var DASH_FORCE : int = 125
+@export var COMBO_COUNTER : int = 0
 
 # -------------------- STATE VARIABLES --------------------
 var was_on_floor : bool = false
@@ -152,8 +153,11 @@ func logica_de_ataque():
 			attack_sound.play()
 			is_attack = true
 			attack_timer.start()
-			attack_buffer_counter = 0 # <--- Limpa o buffer
+			attack_buffer_counter = 0
 			toggle_hitbox(false)
+			
+			COMBO_COUNTER = (COMBO_COUNTER + 1) % 2
+			
 			if not is_dash:
 				velocity.x = 0
 			
@@ -162,7 +166,7 @@ func logica_de_ataque():
 			attack_sound.play()
 			is_attack = true
 			attack_timer.start()
-			attack_buffer_counter = 0 # <--- Limpa o buffer
+			attack_buffer_counter = 0
 			toggle_hitbox(false)
 			velocity.y = -JUMP_FORCE * 0.6
 			air_attack_count += 1
@@ -189,28 +193,34 @@ func aplicar_squash_stretch():
 		create_tween().tween_property(sprite, "scale", Vector2.ONE, 0.1)
 
 func atualizar_visual():
+	# Lógica de Dash
 	if is_dash:
 		sprite.play("Dash")
-	if is_attack and not is_dash:
-		if is_on_floor() and sprite.animation == "Air Attack":
-			is_attack = false
+		return
+	
+# 2. Lógica de Ataque
+	if is_attack:
+		if is_on_floor():
+			var anim_alvo = "Attack 1" if COMBO_COUNTER == 1 else "Attack 2"
+			if sprite.animation != anim_alvo:
+				sprite.play(anim_alvo)
 		else:
-			if is_on_floor() and not is_dash:
-				sprite.play("Attack")
-			elif not is_on_floor() and not is_dash:
+			if sprite.animation != "Air Attack":
 				sprite.play("Air Attack")
 		return
-
-	if not is_on_floor() and not is_dash:
+	
+	# 3. Lógica de Movimentação Aérea
+	if not is_on_floor():
 		if velocity.y < 0:
 			sprite.play("Jump")
 		else:
 			sprite.play("Fall")
 		return
 
-	if abs(velocity.x) > 10 and not is_dash:
+	# 4. Lógica de Movimentação no Chão
+	if abs(velocity.x) > 10:
 		sprite.play("Run")
-	elif abs(velocity.x) == 0 and not is_dash:
+	else:
 		sprite.play("Idle")
 
 func logica_de_dash():
