@@ -1,10 +1,12 @@
 extends CharacterBody2D
 
 # -------------------- TIMERS & NODES --------------------
+var buffer_time : float = 0.15
+var jump_buffer_counter : float = 0
+var dash_buffer_counter : float = 0
+var attack_buffer_counter : float = 0
 @onready var CoyoteTimer : Timer = $CoyoteTimer
-@onready var JumpBufferTimer : Timer = $JumpBufferTimer
 @onready var attack_timer : Timer = $AttackTimer
-@onready var attack_buffer_timer : Timer = $AttackBufferTimer
 @onready var dash_timer : Timer = $DashTimer
 
 @onready var sprite = $PlayerAnimation
@@ -56,8 +58,19 @@ func take_damage(amount: float):
 
 # -------------------- PHYSICS --------------------
 func _physics_process(delta):
+	jump_buffer_counter = max(0, jump_buffer_counter - delta)
+	dash_buffer_counter = max(0, dash_buffer_counter - delta)
+	attack_buffer_counter = max(0, attack_buffer_counter - delta)
+	
+	if Input.is_action_just_pressed("Jump"):
+		jump_buffer_counter = buffer_time
+	if Input.is_action_just_pressed("Dash"):
+		dash_buffer_counter = buffer_time
+	if Input.is_action_just_pressed("Attack"):
+		attack_buffer_counter = buffer_time
+	
 	logica_de_movimentacao_horizontal(delta)
-	lógica_de_dash()
+	logica_de_dash()
 	logica_de_ataque()
 	logica_de_gravidade(delta)
 	logica_de_pulo()
@@ -107,27 +120,22 @@ func logica_de_gravidade(_delta):
 		CoyoteTimer.stop()
 
 func logica_de_pulo():
-	# ---------------- INPUT BUFFER ----------------
-	if Input.is_action_just_pressed("Jump"):
-		JumpBufferTimer.start()
-		
-
 	# ---------------- JUMP ----------------
-	if not JumpBufferTimer.is_stopped() and not is_attack:
+	if jump_buffer_counter > 0 and not is_attack:
 		if max_jump_number < 1:
 			if is_on_floor() or not CoyoteTimer.is_stopped():
 				velocity.y = -JUMP_FORCE
 				max_jump_number += 1
-
+				
 				is_attack = false
 				attack_timer.stop()
 				toggle_hitbox(true)
-
+				
 				sprite.scale = Vector2(0.8, 1.2)
 				create_tween().tween_property(sprite, "scale", Vector2.ONE, 0.15)
-
+				
 				CoyoteTimer.stop()
-				JumpBufferTimer.stop()
+				jump_buffer_counter = 0
 
 	# ---------------- SHORT HOP ----------------
 	if Input.is_action_just_released("Jump") and velocity.y < 0:
@@ -137,29 +145,24 @@ func logica_de_ataque():
 	if is_on_floor():
 		air_attack_count = 0
 		
-	# ---------------- INPUT BUFFER ----------------
-	if Input.is_action_just_pressed("Attack"):
-		attack_buffer_timer.start()
-		
 	# ---------------- EXECUTAR ATAQUE ----------------
-	if not attack_buffer_timer.is_stopped() and not is_attack and not is_dash:
+	if attack_buffer_counter > 0 and not is_attack and not is_dash:
 		if is_on_floor():
 			attack_sound.pitch_scale = randf_range(0.9, 1.1)
 			attack_sound.play()
 			is_attack = true
 			attack_timer.start()
-			attack_buffer_timer.stop()
+			attack_buffer_counter = 0 # <--- Limpa o buffer
 			toggle_hitbox(false)
 			if not is_dash:
 				velocity.x = 0
 			
-		
 		elif air_attack_count < 1 and not is_dash:
 			attack_sound.pitch_scale = randf_range(0.9, 1.1)
 			attack_sound.play()
 			is_attack = true
 			attack_timer.start()
-			attack_buffer_timer.stop()
+			attack_buffer_counter = 0 # <--- Limpa o buffer
 			toggle_hitbox(false)
 			velocity.y = -JUMP_FORCE * 0.6
 			air_attack_count += 1
@@ -167,10 +170,10 @@ func logica_de_ataque():
 			sprite.scale = Vector2(1.4, 0.8)
 			create_tween().tween_property(sprite, "scale", Vector2.ONE, 0.1)
 
-func handle_head_nudge():
-	pass
-
 func aplicar_squash_stretch():
+	if is_dash:
+		return
+	
 	if is_on_floor() and not was_on_floor:
 		sprite.scale = Vector2(1.15, 0.85)
 		var tween = create_tween()
@@ -210,20 +213,33 @@ func atualizar_visual():
 	elif abs(velocity.x) == 0 and not is_dash:
 		sprite.play("Idle")
 
-func lógica_de_dash():
-	
+func logica_de_dash():
 	if is_on_floor():
 		max_dash = 1
 	
 	if not have_dash: return
 	
-	if Input.is_action_just_pressed("Dash") and not is_dash and not is_attack:
+	if dash_buffer_counter > 0 and not is_dash and not is_attack:
 		if dash_timer.is_stopped() and (is_on_floor() or max_dash > 0):
 			if not is_on_floor():
 				max_dash = 0
 			
 			is_dash = true
+			dash_buffer_counter = 0
 			dash_timer.start()
+			
+			# --- SQUASH AND STRETCH DO DASH ---
+			sprite.scale = Vector2(1.4, 0.8)
+			create_tween().tween_property(sprite, "scale", Vector2.ONE, 0.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+			
+			
+			# --- DISPARAR RASTROS ---
+			for i in range(5):
+				var tempo_espera = i * 0.06
+				get_tree().create_timer(tempo_espera).timeout.connect(criar_rastro)
+			
+			attack_sound.pitch_scale = randf_range(0.6, 0.8)
+			attack_sound.play()
 			
 			velocity.y = 0
 			if sprite.flip_h:
@@ -232,3 +248,29 @@ func lógica_de_dash():
 				velocity.x = DASH_FORCE
 				
 			toggle_hitbox(false)
+
+func criar_rastro():
+	var ghost = Sprite2D.new()
+	
+	ghost.texture = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame)	
+	
+	var offset = 5.0 if sprite.flip_h else -5.0
+	
+	ghost.global_position = global_position + Vector2(offset, 0)
+	
+	ghost.flip_h = sprite.flip_h
+	ghost.scale = Vector2.ONE
+	
+	ghost.modulate = Color(0.2, 0.1, 0.1, 1.0)
+	
+	ghost.z_index = z_index - 1
+	
+	get_parent().add_child(ghost)
+	
+	var tween = create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(ghost, "modulate:a", 0.0, 0.4)
+	tween.tween_property(ghost, "modulate:r", 0.0, 0.4)
+	
+	tween.set_parallel(false)
+	tween.tween_callback(ghost.queue_free)

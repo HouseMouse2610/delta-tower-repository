@@ -695,7 +695,7 @@ script = ExtResource("1_88kja")
 
 [node name="PlayerAnimation" type="AnimatedSprite2D" parent="." unique_id=1786979554]
 sprite_frames = SubResource("SpriteFrames_opb2v")
-animation = &"Air Attack"
+animation = &"Dash"
 autoplay = "Idle"
 
 [node name="CollisionPlayer" type="CollisionShape2D" parent="." unique_id=448109105]
@@ -707,23 +707,13 @@ process_callback = 0
 wait_time = 0.1
 one_shot = true
 
-[node name="JumpBufferTimer" type="Timer" parent="." unique_id=239377594]
-wait_time = 0.12
-one_shot = true
-
 [node name="AttackTimer" type="Timer" parent="." unique_id=101795759]
 wait_time = 0.4
-one_shot = true
-
-[node name="AttackBufferTimer" type="Timer" parent="." unique_id=2011398167]
-wait_time = 0.2
 one_shot = true
 
 [node name="DashTimer" type="Timer" parent="." unique_id=1281381793]
 wait_time = 0.5
 one_shot = true
-
-[node name="DashBufferTimer" type="Timer" parent="." unique_id=748585945]
 
 [node name="AttackArea" type="Area2D" parent="." unique_id=2070024522]
 position = Vector2(10, 0)
