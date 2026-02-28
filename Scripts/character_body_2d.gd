@@ -234,7 +234,7 @@ func logica_de_dash():
 			
 			
 			# --- DISPARAR RASTROS ---
-			for i in range(5):
+			for i in range(6):
 				var tempo_espera = i * 0.06
 				get_tree().create_timer(tempo_espera).timeout.connect(criar_rastro)
 			

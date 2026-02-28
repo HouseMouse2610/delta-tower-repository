@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://cr220h17e3bkn"
+path="res://.godot/imported/Jummbox Song 9.5 Tema Completo da Tela de Título Delta Tower.ogg-5f52a2c30c840781cb932b1b149affe9.oggvorbisstr"
+
+[deps]
+
+source_file="res://Assets/Sound Assets/Music Assets/Jummbox Song 9.5 Tema Completo da Tela de Título Delta Tower.ogg"
+dest_files=["res://.godot/imported/Jummbox Song 9.5 Tema Completo da Tela de Título Delta Tower.ogg-5f52a2c30c840781cb932b1b149affe9.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

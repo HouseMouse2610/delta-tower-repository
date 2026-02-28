@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://bhexx6mj1xv3q" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_2d.gd" id="3_6whob"]
 [ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="3_u7krg"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="4_u7krg"]
+[ext_resource type="AudioStream" uid="uid://cr220h17e3bkn" path="res://Assets/Sound Assets/Music Assets/Jummbox Song 9.5 Tema Completo da Tela de Título Delta Tower.ogg" id="6_tx0tn"]
 
 [sub_resource type="Resource" id="Resource_tx0tn"]
 script = ExtResource("4_u7krg")
@@ -44,3 +45,8 @@ follow_damping = true
 dead_zone_width = 0.1
 dead_zone_height = 0.1
 metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
+
+[node name="Musica Provisória de Fundo" type="AudioStreamPlayer" parent="." unique_id=70563001]
+stream = ExtResource("6_tx0tn")
+autoplay = true
+parameters/looping = true
