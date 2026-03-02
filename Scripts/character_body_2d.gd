@@ -12,6 +12,7 @@ var attack_buffer_counter : float = 0
 @onready var sprite = $PlayerAnimation
 @onready var attack_hitbox = $AttackArea/CollisionAttack
 @onready var attack_sound = $AttackSound
+@onready var dust_particles = $GPUParticles2D
 
 # -------------------- EXPORT VARIABLES --------------------
 @export var SPEED : float = 75.0
@@ -76,6 +77,7 @@ func _physics_process(delta):
 	logica_de_gravidade(delta)
 	logica_de_pulo()
 	atualizar_visual()
+	aplicar_particulas()
 	aplicar_squash_stretch()
 	was_on_floor = is_on_floor()
 	move_and_slide()
@@ -284,3 +286,14 @@ func criar_rastro():
 	
 	tween.set_parallel(false)
 	tween.tween_callback(ghost.queue_free)
+
+func aplicar_particulas():
+	if is_on_floor() and abs(velocity.x) > 10:
+		dust_particles.emitting = true
+		
+		if sprite.flip_h:
+			dust_particles.process_material.direction = Vector3(1, -0.5, 0)
+		else:
+				dust_particles.process_material.direction = Vector3(-1, -0.5, 0) # Sopra para a esquerda
+	else:
+		dust_particles.emitting = false

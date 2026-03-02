@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://bt01tk0k2lef7" path="res://Assets/Sprite Assets/Player Sprites/Player Animations/Sprite Knight Character Godot.png" id="2_it8n0"]
 [ext_resource type="Texture2D" uid="uid://ti4mf8ikr8xh" path="res://Assets/Sprite Assets/Player Sprites/Player Animations/Sprite Knight Character Godot 3.png" id="3_pbq55"]
 [ext_resource type="AudioStream" uid="uid://pkaisjrxpftf" path="res://Assets/Sound Assets/Sound Effect Assets/Slash Sound Effect3.wav" id="4_gbyq6"]
+[ext_resource type="Texture2D" uid="uid://d3i7c6xrlimya" path="res://Assets/Sprite Assets/Other Sprites/Sprite Particle.png" id="6_t38ji"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pbq55"]
 atlas = ExtResource("2_gbyq6")
@@ -738,13 +739,38 @@ height = 14.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_it8n0"]
 size = Vector2(15, 23)
 
+[sub_resource type="Gradient" id="Gradient_t38ji"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_pbj7x"]
+gradient = SubResource("Gradient_t38ji")
+
+[sub_resource type="Curve" id="Curve_t38ji"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.49438208), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_pbj7x"]
+curve = SubResource("Curve_t38ji")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_pbj7x"]
+lifetime_randomness = 0.3
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 1.0
+angle_min = -24.99999
+angle_max = 25.000011
+gravity = Vector3(0, -10, 0)
+scale_curve = SubResource("CurveTexture_pbj7x")
+color_ramp = SubResource("GradientTexture1D_pbj7x")
+
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=1906971917]
 script = ExtResource("1_88kja")
 
 [node name="PlayerAnimation" type="AnimatedSprite2D" parent="." unique_id=1786979554]
 sprite_frames = SubResource("SpriteFrames_opb2v")
-animation = &"Idle"
+animation = &"Run"
 autoplay = "Idle"
+frame_progress = 0.3676896
 
 [node name="CollisionPlayer" type="CollisionShape2D" parent="." unique_id=448109105]
 position = Vector2(-0.5, 1)
@@ -773,6 +799,12 @@ disabled = true
 
 [node name="AttackSound" type="AudioStreamPlayer2D" parent="." unique_id=1173813647]
 stream = ExtResource("4_gbyq6")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="." unique_id=1053391340]
+modulate = Color(0.6509804, 0.6509804, 0.6509804, 0.7411765)
+position = Vector2(0, 7)
+texture = ExtResource("6_t38ji")
+process_material = SubResource("ParticleProcessMaterial_pbj7x")
 
 [connection signal="animation_finished" from="PlayerAnimation" to="." method="_on_player_animation_animation_finished"]
 [connection signal="timeout" from="AttackTimer" to="." method="_on_attack_timer_timeout"]
