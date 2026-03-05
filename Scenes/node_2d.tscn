@@ -25,6 +25,10 @@ zoom = Vector2(5, 5)
 process_callback = 0
 drag_horizontal_enabled = true
 drag_vertical_enabled = true
+drag_left_margin = 0.15
+drag_right_margin = 0.15
+drag_bottom_margin = 0.11
+editor_draw_drag_margin = true
 
 [node name="PhantomCameraHost" type="Node" parent="Camera2D" unique_id=1678344532]
 process_priority = 300
@@ -48,5 +52,6 @@ metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
 
 [node name="Musica Provisória de Fundo" type="AudioStreamPlayer" parent="." unique_id=70563001]
 stream = ExtResource("6_tx0tn")
+volume_db = -50.0
 autoplay = true
 parameters/looping = true
