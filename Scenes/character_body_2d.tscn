@@ -776,6 +776,14 @@ disabled = true
 [node name="AttackSound" type="AudioStreamPlayer2D" parent="." unique_id=1173813647]
 stream = ExtResource("4_gbyq6")
 
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=63440855]
+
+[node name="DebugLabel" type="Label" parent="CanvasLayer" unique_id=82471086]
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+
 [connection signal="animation_finished" from="PlayerAnimation" to="." method="_on_player_animation_animation_finished"]
 [connection signal="timeout" from="AttackTimer" to="." method="_on_attack_timer_timeout"]
 [connection signal="timeout" from="DashTimer" to="." method="_on_dash_timer_timeout"]

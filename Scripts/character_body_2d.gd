@@ -1,3 +1,5 @@
+class_name Player
+
 extends CharacterBody2D
 
 # -------------------- TIMERS & NODES --------------------
@@ -101,6 +103,7 @@ func _physics_process(delta):
 	aplicar_squash_stretch()
 	was_on_floor = is_on_floor()
 	move_and_slide()
+	atualizar_debug_hud()
 
 # -------------------- FUNÇÕES DE LÓGICA --------------------
 func aplicar_squash_stretch():
@@ -131,6 +134,8 @@ func atualizar_visual():
 		States.DASH:
 			sprite.play("Dash")
 		States.ATTACK:
+			if sprite.animation == "Air Attack":
+				return
 			if is_on_floor():
 				var anim_alvo = "Attack 1" if COMBO_COUNTER == 1 else "Attack 2"
 				sprite.play(anim_alvo)
@@ -138,25 +143,25 @@ func atualizar_visual():
 				sprite.play("Air Attack")
 
 func logica_de_dash():
-	# Removi as checagens redundantes, pois o change_state já filtrou isso
-	max_dash = 0 # Consome o dash aéreo
-	dash_buffer_counter = 0
-	dash_timer.start()
-	
-	# Efeitos Visuais e Sonoros
-	sprite.scale = Vector2(1.4, 0.8)
-	create_tween().tween_property(sprite, "scale", Vector2.ONE, 0.2)
-	
-	for i in range(12):
-		get_tree().create_timer(i * 0.03).timeout.connect(criar_rastro)
-	
-	attack_sound.pitch_scale = randf_range(0.6, 0.8)
-	attack_sound.play()
-	
-	# Física do Dash
-	velocity.y = 0
-	velocity.x = -DASH_FORCE if sprite.flip_h else DASH_FORCE
-	toggle_hitbox(false)
+	if have_dash:
+		max_dash = 0 # Consome o dash aéreo
+		dash_buffer_counter = 0
+		dash_timer.start()
+		
+		# Efeitos Visuais e Sonoros
+		sprite.scale = Vector2(1.4, 0.8)
+		create_tween().tween_property(sprite, "scale", Vector2.ONE, 0.2)
+		
+		for i in range(12):
+			get_tree().create_timer(i * 0.03).timeout.connect(criar_rastro)
+		
+		attack_sound.pitch_scale = randf_range(0.6, 0.8)
+		attack_sound.play()
+		
+		# Física do Dash
+		velocity.y = 0
+		velocity.x = -DASH_FORCE if sprite.flip_h else DASH_FORCE
+		toggle_hitbox(false)
 
 func criar_rastro():
 	if not is_instance_valid(self) or not is_inside_tree(): return
@@ -198,6 +203,10 @@ func atualizar_buffers(delta):
 		attack_buffer_counter = buffer_time
 
 func change_state(new_state: States):
+	if current_state == States.ATTACK and new_state == States.ATTACK:
+		if not is_on_floor(): 
+			return
+	
 	if current_state == new_state: return
 	
 	# SAÍDA do Estado Antigo
@@ -207,6 +216,7 @@ func change_state(new_state: States):
 			dash_timer.stop()
 		States.ATTACK:
 			toggle_hitbox(true)
+			attack_timer.stop()
 			
 	current_state = new_state
 	
@@ -222,9 +232,11 @@ func change_state(new_state: States):
 			logica_de_dash()
 		States.ATTACK:
 			attack_buffer_counter = 0
+			
 			if not is_on_floor():
-				velocity.y = 0 
-				velocity.y = -JUMP_FORCE * 0.4
+				air_attack_count += 1
+				velocity.y = 0
+				velocity.y = -JUMP_FORCE * 0.5
 			
 			attack_sound.pitch_scale = randf_range(0.9, 1.1)
 			attack_sound.play()
@@ -270,7 +282,8 @@ func logic_jump(_delta):
 	if velocity.y >= 0:
 		change_state(States.FALL)
 	elif attack_buffer_counter > 0:
-		change_state(States.ATTACK)
+		if is_on_floor() or air_attack_count == 0:
+			change_state(States.ATTACK)
 	elif dash_buffer_counter > 0 and have_dash and max_dash > 0:
 		change_state(States.DASH)
 
@@ -282,7 +295,8 @@ func logic_fall(_delta):
 	elif dash_buffer_counter > 0 and have_dash and max_dash > 0:
 		change_state(States.DASH)
 	elif attack_buffer_counter > 0:
-		change_state(States.ATTACK)
+		if is_on_floor() or air_attack_count == 0:
+			change_state(States.ATTACK)
 
 func logic_dash(_delta):
 	# O Dash é controlado pelo DashTimer ou Animação
@@ -290,9 +304,17 @@ func logic_dash(_delta):
 	pass
 
 func logic_attack(_delta):
-	# Durante o ataque no chão, geralmente paramos o player
 	if is_on_floor():
 		velocity.x = move_toward(velocity.x, 0, FRICTION * _delta)
+		if sprite.animation == "Air Attack":
+			change_state(States.IDLE)
+	else:
+		# ADICIONE ESTA LINHA: Permite mover-se horizontalmente durante o ataque aéreo
+		processar_movimento_aereo(_delta)
+		
+		# Mantém a sua trava de segurança para não repetir o ataque
+		if attack_buffer_counter > 0:
+			attack_buffer_counter = 0
 
 func processar_movimento_aereo(delta):
 	var dir = Input.get_axis("Left", "Right")
@@ -310,6 +332,39 @@ func aplicar_gravidade_custom(delta):
 		if was_on_floor and velocity.y >= 0:
 			CoyoteTimer.start()
 		
-		# Gravidade normal ou multiplicada na queda
 		var mult = FALL_GRAVITY_MULTIPLIER if velocity.y > 0 else 1.0
 		velocity.y += GRAVITY * mult * delta
+
+func atualizar_debug_hud():
+	# Transforma o Enum em String legível
+	var state_name = States.keys()[current_state]
+	
+	var pode_atacar_ar : String
+	if is_on_floor():
+		pode_atacar_ar = "🟢 No Chão"
+	elif air_attack_count == 0:
+		pode_atacar_ar = "🟢 Disponível"
+	else:
+		pode_atacar_ar = "🔴 Gasto"
+	
+	var debug_text = ""
+	debug_text += "[ ESTADO ]: %s\n" % state_name
+	debug_text += "[ VELOCIDADE ]: %s\n" % str(velocity.round())
+	debug_text += "[ NO CHÃO ]: %s\n" % ("🟢 Sim" if is_on_floor() else "🔴 Não")
+	debug_text += "[ COMBO ]: %d\n" % (COMBO_COUNTER + 1)
+	debug_text += "[ ATAQUE NO AR ]: %s\n" % pode_atacar_ar
+	
+	
+	debug_text += "\n--- HABILIDADES ---\n"
+	debug_text += "DASH: %s (Disp: %d)\n" % [("🟢 Sim" if have_dash else "🔴 Não"), max_dash]
+	debug_text += "PULO DUPLO: %s\n" % ("🟢 Sim" if have_double_jump else "🔴 Não")
+	debug_text += "ATAQUE BAIXO: %s\n" % ("🟢 Sim" if have_down_attack else "🔴 Não")
+	
+	debug_text += "\n--- BUFFERS ---\n"
+	debug_text += "Pulo: %.2f | Ataque: %.2f" % [jump_buffer_counter, attack_buffer_counter]
+	
+	if Input.is_action_just_pressed("debug_key"):
+		$CanvasLayer.visible = not $CanvasLayer.visible
+	
+	# Atualiza o nó Label
+	$CanvasLayer/DebugLabel.text = debug_text

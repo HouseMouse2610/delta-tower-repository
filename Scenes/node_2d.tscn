@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dxx5x501fwk2b"]
 
 [ext_resource type="PackedScene" uid="uid://cj2yykbfe8uc7" path="res://Scenes/character_body_2d.tscn" id="1_v1qfn"]
+[ext_resource type="Script" uid="uid://c71ccgdmbo3d" path="res://Scripts/node_2d.gd" id="1_wjtap"]
 [ext_resource type="PackedScene" uid="uid://bslu1267yjkem" path="res://Scenes/tileset_node.tscn" id="2_v1qfn"]
 [ext_resource type="Script" uid="uid://bhexx6mj1xv3q" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_2d.gd" id="3_6whob"]
 [ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="3_u7krg"]
@@ -11,6 +12,7 @@
 script = ExtResource("4_u7krg")
 
 [node name="Node2D" type="Node2D" unique_id=250771284]
+script = ExtResource("1_wjtap")
 
 [node name="Player" parent="." unique_id=300032359 instance=ExtResource("1_v1qfn")]
 position = Vector2(0, -8)
@@ -52,6 +54,6 @@ metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
 
 [node name="Musica Provisória de Fundo" type="AudioStreamPlayer" parent="." unique_id=70563001]
 stream = ExtResource("6_tx0tn")
-volume_db = -50.0
+volume_db = -10.0
 autoplay = true
 parameters/looping = true
