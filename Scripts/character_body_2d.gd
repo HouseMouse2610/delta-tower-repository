@@ -7,9 +7,11 @@ var buffer_time : float = 0.15
 var jump_buffer_counter : float = 0
 var dash_buffer_counter : float = 0
 var attack_buffer_counter : float = 0
+var jump_count : int = 0
 @onready var CoyoteTimer : Timer = $CoyoteTimer
 @onready var attack_timer : Timer = $AttackTimer
 @onready var dash_timer : Timer = $DashTimer
+@onready var dash_cooldown : Timer = $DashCooldownTimer
 
 @onready var sprite = $PlayerAnimation
 @onready var anim_data = $PlayerAnimation.sprite_frames
@@ -24,7 +26,6 @@ var attack_buffer_counter : float = 0
 @export var GRAVITY : int = 600
 @export var FALL_GRAVITY_MULTIPLIER : float = 1.2
 @export var JUMP_FORCE : int = 220
-@export var HEAD_NUDGE_SPEED : float = 35.0
 @export var air_attack_count : int = 0
 @export var max_health : float = 10.0
 @export var current_health : float = 10.0
@@ -144,9 +145,10 @@ func atualizar_visual():
 
 func logica_de_dash():
 	if have_dash:
-		max_dash = 0 # Consome o dash aéreo
+		max_dash = 0
 		dash_buffer_counter = 0
-		dash_timer.start()
+		dash_timer.start(0.2) # Duração do movimento (curto)
+		dash_cooldown.start(0.6)
 		
 		# Efeitos Visuais e Sonoros
 		sprite.scale = Vector2(1.4, 0.8)
@@ -225,6 +227,7 @@ func change_state(new_state: States):
 			pass
 		States.JUMP:
 			jump_buffer_counter = 0
+			jump_count += 1
 			velocity.y = -JUMP_FORCE
 			sprite.scale = Vector2(0.8, 1.2)
 			create_tween().tween_property(sprite, "scale", Vector2.ONE, 0.15)
@@ -253,7 +256,7 @@ func logic_idle(delta):
 		change_state(States.JUMP)
 	elif attack_buffer_counter > 0:
 		change_state(States.ATTACK)
-	elif dash_buffer_counter > 0 and have_dash and max_dash > 0:
+	elif dash_buffer_counter > 0 and have_dash and max_dash > 0 and dash_cooldown.is_stopped():
 		change_state(States.DASH)
 	elif not is_on_floor():
 		change_state(States.FALL)
@@ -272,19 +275,25 @@ func logic_run(delta):
 		change_state(States.JUMP)
 	elif attack_buffer_counter > 0:
 		change_state(States.ATTACK)
-	elif dash_buffer_counter > 0 and have_dash and max_dash > 0:
+	elif dash_buffer_counter > 0 and have_dash and max_dash > 0 and dash_cooldown.is_stopped():
 		change_state(States.DASH)
 	elif not is_on_floor():
 		change_state(States.FALL)
 
 func logic_jump(_delta):
 	processar_movimento_aereo(_delta)
+	if jump_buffer_counter > 0 and have_double_jump and jump_count < 2:
+		change_state(States.JUMP)
+		return
+	
 	if velocity.y >= 0:
 		change_state(States.FALL)
-	elif attack_buffer_counter > 0:
-		if is_on_floor() or air_attack_count == 0:
+		
+	if attack_buffer_counter > 0:
+		if air_attack_count == 0: # Se ainda não atacou no ar, pode atacar
 			change_state(States.ATTACK)
-	elif dash_buffer_counter > 0 and have_dash and max_dash > 0:
+			
+	elif dash_buffer_counter > 0 and have_dash and max_dash > 0 and dash_cooldown.is_stopped():
 		change_state(States.DASH)
 
 func logic_fall(_delta):
@@ -292,7 +301,16 @@ func logic_fall(_delta):
 	
 	if is_on_floor():
 		change_state(States.IDLE)
-	elif dash_buffer_counter > 0 and have_dash and max_dash > 0:
+	
+	# Se apertar pulo e o Timer do Coyote ainda estiver ativo, pula.
+	elif jump_buffer_counter > 0:
+		if not CoyoteTimer.is_stopped():
+			CoyoteTimer.stop()
+			change_state(States.JUMP)
+		elif have_double_jump and jump_count < 2:
+			change_state(States.JUMP)
+		
+	elif dash_buffer_counter > 0 and have_dash and max_dash > 0 and dash_cooldown.is_stopped():
 		change_state(States.DASH)
 	elif attack_buffer_counter > 0:
 		if is_on_floor() or air_attack_count == 0:
@@ -325,8 +343,12 @@ func processar_movimento_aereo(delta):
 
 func aplicar_gravidade_custom(delta):
 	if is_on_floor():
-		max_dash = 1
+		if have_dash:
+			max_dash = 1
+		else:
+			max_dash = 0
 		air_attack_count = 0
+		jump_count = 0
 		# Reset de pulos se você tiver double jump futuramente
 	else:
 		if was_on_floor and velocity.y >= 0:

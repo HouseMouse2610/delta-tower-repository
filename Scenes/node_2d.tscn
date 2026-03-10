@@ -27,9 +27,9 @@ position = Vector2(0, -8)
 top_level = true
 zoom = Vector2(5, 5)
 limit_left = -176
-limit_top = -272
+limit_top = -112
 limit_right = 176
-limit_bottom = -112
+limit_bottom = 48
 drag_horizontal_enabled = true
 drag_vertical_enabled = true
 drag_left_margin = 0.15
@@ -52,12 +52,17 @@ parameters/looping = true
 
 [node name="Salas" type="Node" parent="." unique_id=1970124664]
 
-[node name="RoomArea1" parent="Salas" unique_id=245370712 instance=ExtResource("6_wjtap")]
+[node name="RoomArea1" parent="Salas" unique_id=245370712 node_paths=PackedStringArray("room_pcam") instance=ExtResource("6_wjtap")]
+room_pcam = NodePath("PhantomCamera2D")
+
+[node name="PhantomCamera2D" parent="Salas/RoomArea1" index="0" unique_id=1382243686]
+priority = 1
 
 [node name="CollisionShape2D" parent="Salas/RoomArea1" index="1" unique_id=1517324851]
 shape = SubResource("RectangleShape2D_tx0tn")
 
-[node name="RoomArea2" parent="Salas" unique_id=929188431 instance=ExtResource("6_wjtap")]
+[node name="RoomArea2" parent="Salas" unique_id=929188431 node_paths=PackedStringArray("room_pcam") instance=ExtResource("6_wjtap")]
+room_pcam = NodePath("PhantomCamera2D")
 
 [node name="CollisionShape2D" parent="Salas/RoomArea2" index="1" unique_id=1517324851]
 position = Vector2(0, -192)

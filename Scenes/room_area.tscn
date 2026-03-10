@@ -23,6 +23,8 @@ zoom = Vector2(5, 5)
 snap_to_pixel = true
 tween_resource = SubResource("Resource_chwn1")
 inactive_update_mode = 1
+follow_damping = true
+follow_damping_value = Vector2(0.05, 0.05)
 limit_target = NodePath("../CollisionShape2D")
 metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
 

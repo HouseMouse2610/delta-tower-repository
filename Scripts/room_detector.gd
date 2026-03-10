@@ -1,23 +1,35 @@
 class_name Camera_Sala
-
 extends Area2D
 
-@onready var room_pcam : PhantomCamera2D = $PhantomCamera2D
+@export var room_pcam : PhantomCamera2D
+@export var transition_time : float = 0.35
 
 func _ready():
-	# Conecta os sinais de entrada e saída
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
+	
+	# Configura a velocidade da transição programaticamente
+	if room_pcam:
+		room_pcam.tween_duration = transition_time
+	
+	# Aguarda um frame para calcular limites (garante precisão)
+	await get_tree().process_frame
 
 func _on_body_entered(body):
 	if body is Player:
-		# Aumenta a prioridade para 10.
-		# fará a transição suave para esta câmera.
-		room_pcam.follow_target = body
-		room_pcam.priority = 10
+		# VERIFICAÇÃO DE SEGURANÇA: Só executa se a câmera existir
+		if room_pcam != null:
+			room_pcam.follow_target = body
+			room_pcam.priority = 20
+			
+			# Impulso para não cair de volta (correção do bug de subir sala)
+			if body.velocity.y < -10:
+				body.velocity.y -= 110 
+		else:
+			# Isso vai te avisar no console EXATAMENTE qual sala está sem câmera
+			push_error("ERRO: A sala '" + name + "' não tem uma PhantomCamera conectada no Inspector!")
 
 func _on_body_exited(body):
 	if body is Player:
-		# Abaixa a prioridade. Quando o player entrar na próxima sala, 
-		# a câmera de lá terá prioridade 10 e assumirá o controle.
-		room_pcam.priority = 0
+		if room_pcam != null:
+			room_pcam.priority = 0
