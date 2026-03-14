@@ -3,46 +3,38 @@
 [ext_resource type="PackedScene" uid="uid://cj2yykbfe8uc7" path="res://Scenes/character_body_2d.tscn" id="1_v1qfn"]
 [ext_resource type="Script" uid="uid://c71ccgdmbo3d" path="res://Scripts/node_2d.gd" id="1_wjtap"]
 [ext_resource type="PackedScene" uid="uid://bslu1267yjkem" path="res://Scenes/tileset_node.tscn" id="2_v1qfn"]
-[ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="3_u7krg"]
+[ext_resource type="PackedScene" uid="uid://ddk7urc85rqnf" path="res://Scenes/camera_2d.tscn" id="4_tx0tn"]
 [ext_resource type="AudioStream" uid="uid://cr220h17e3bkn" path="res://Assets/Sound Assets/Music Assets/Jummbox Song 9.5 Tema Completo da Tela de Título Delta Tower.ogg" id="6_tx0tn"]
 [ext_resource type="PackedScene" uid="uid://b814d30g7uc7e" path="res://Scenes/room_area.tscn" id="6_wjtap"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tx0tn"]
 resource_local_to_scene = true
-size = Vector2(352, 160)
+size = Vector2(368, 176)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wjtap"]
 resource_local_to_scene = true
-size = Vector2(352, 160)
+size = Vector2(368, 208)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_v7gqg"]
+resource_local_to_scene = true
+size = Vector2(624, 384)
 
 [node name="Node2D" type="Node2D" unique_id=250771284]
 script = ExtResource("1_wjtap")
 
 [node name="Player" parent="." unique_id=300032359 instance=ExtResource("1_v1qfn")]
-position = Vector2(0, -8)
+position = Vector2(0, 24)
 
 [node name="Tileset Node" parent="." unique_id=1381621078 instance=ExtResource("2_v1qfn")]
 
-[node name="Camera2D" type="Camera2D" parent="." unique_id=1092405659]
-top_level = true
-zoom = Vector2(5, 5)
-limit_left = -176
-limit_top = -112
-limit_right = 176
-limit_bottom = 48
-drag_horizontal_enabled = true
-drag_vertical_enabled = true
-drag_left_margin = 0.15
-drag_top_margin = 0.3
-drag_right_margin = 0.15
-drag_bottom_margin = 0.1
-editor_draw_drag_margin = true
+[node name="Camera2D" parent="." unique_id=686980484 instance=ExtResource("4_tx0tn")]
+offset = Vector2(0, 0)
+limit_top = -96
+limit_right = 208
+limit_bottom = 80
 
-[node name="PhantomCameraHost" type="Node" parent="Camera2D" unique_id=1678344532]
-process_priority = 300
-process_physics_priority = 300
-script = ExtResource("3_u7krg")
-metadata/_custom_type_script = "uid://bd046eokvcnu2"
+[node name="PhantomCameraHost" parent="Camera2D" index="0" unique_id=1646959900]
+interpolation_mode = 2
 
 [node name="Musica Provisória de Fundo" type="AudioStreamPlayer" parent="." unique_id=70563001]
 stream = ExtResource("6_tx0tn")
@@ -55,18 +47,32 @@ parameters/looping = true
 [node name="RoomArea1" parent="Salas" unique_id=245370712 node_paths=PackedStringArray("room_pcam") instance=ExtResource("6_wjtap")]
 room_pcam = NodePath("PhantomCamera2D")
 
-[node name="PhantomCamera2D" parent="Salas/RoomArea1" index="0" unique_id=1382243686]
+[node name="PhantomCamera2D" parent="Salas/RoomArea1" index="0" unique_id=1382243686 groups=["pcams"]]
 priority = 1
 
 [node name="CollisionShape2D" parent="Salas/RoomArea1" index="1" unique_id=1517324851]
+position = Vector2(24, -8)
 shape = SubResource("RectangleShape2D_tx0tn")
 
 [node name="RoomArea2" parent="Salas" unique_id=929188431 node_paths=PackedStringArray("room_pcam") instance=ExtResource("6_wjtap")]
 room_pcam = NodePath("PhantomCamera2D")
 
+[node name="PhantomCamera2D" parent="Salas/RoomArea2" index="0" unique_id=1382243686 groups=["pcams"]]
+
 [node name="CollisionShape2D" parent="Salas/RoomArea2" index="1" unique_id=1517324851]
-position = Vector2(0, -192)
+position = Vector2(24, -200)
 shape = SubResource("RectangleShape2D_wjtap")
 
+[node name="RoomArea3" parent="Salas" unique_id=592064746 node_paths=PackedStringArray("room_pcam") instance=ExtResource("6_wjtap")]
+room_pcam = NodePath("PhantomCamera2D")
+
+[node name="PhantomCamera2D" parent="Salas/RoomArea3" index="0" unique_id=1382243686 groups=["pcams"]]
+
+[node name="CollisionShape2D" parent="Salas/RoomArea3" index="1" unique_id=1517324851]
+position = Vector2(-472, -112)
+shape = SubResource("RectangleShape2D_v7gqg")
+
+[editable path="Camera2D"]
 [editable path="Salas/RoomArea1"]
 [editable path="Salas/RoomArea2"]
+[editable path="Salas/RoomArea3"]

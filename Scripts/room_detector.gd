@@ -1,35 +1,41 @@
 class_name Camera_Sala
+
 extends Area2D
 
 @export var room_pcam : PhantomCamera2D
 @export var transition_time : float = 0.35
 
-func _ready():
+func _ready() -> void:
 	body_entered.connect(_on_body_entered)
-	body_exited.connect(_on_body_exited)
 	
-	# Configura a velocidade da transição programaticamente
 	if room_pcam:
 		room_pcam.tween_duration = transition_time
-	
-	# Aguarda um frame para calcular limites (garante precisão)
-	await get_tree().process_frame
 
 func _on_body_entered(body):
 	if body is Player:
-		# VERIFICAÇÃO DE SEGURANÇA: Só executa se a câmera existir
-		if room_pcam != null:
-			room_pcam.follow_target = body
-			room_pcam.priority = 20
+		if room_pcam:
+			# 1. Troca a câmera no Manager
+			GameCamera.switch_to_room(room_pcam, body)
 			
-			# Impulso para não cair de volta (correção do bug de subir sala)
-			if body.velocity.y < -10:
-				body.velocity.y -= 110 
+			var vel = body.velocity
+			# Lógica de Impulsos Direcionais
+			
+			# Verificamos se a transição é prioritariamente Horizontal ou Vertical
+			if abs(vel.x) > abs(vel.y):
+				# --- TRANSIÇÃO HORIZONTAL ---
+				if vel.x < 0:
+					# O jogador está à esquerda do centro: Impulso para a ESQUERDA
+					body.velocity.x -= 100
+				elif vel.x > 0:
+					# O jogador está à direita do centro: Impulso para a DIREITA
+					body.velocity.x += 100
+			else:
+				# --- TRANSIÇÃO VERTICAL ---
+				body.velocity.x = 0 # Limpa o drift lateral para não bater na quina
+				
+				if vel.y < 0:
+					# O jogador está acima do centro: Impulso para CIMA
+					body.velocity.y -= body.JUMP_FORCE
+					
 		else:
-			# Isso vai te avisar no console EXATAMENTE qual sala está sem câmera
-			push_error("ERRO: A sala '" + name + "' não tem uma PhantomCamera conectada no Inspector!")
-
-func _on_body_exited(body):
-	if body is Player:
-		if room_pcam != null:
-			room_pcam.priority = 0
+			push_error("Sala sem PhantomCamera!")

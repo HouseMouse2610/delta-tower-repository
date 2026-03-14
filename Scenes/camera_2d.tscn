@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://ddk7urc85rqnf"]
+
+[ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="1_omgnx"]
+
+[node name="Camera2D" type="Camera2D" unique_id=686980484]
+top_level = true
+offset = Vector2(0, 25)
+zoom = Vector2(5, 5)
+limit_left = -160
+limit_top = -112
+limit_right = 192
+limit_bottom = 64
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+drag_left_margin = 0.15
+drag_top_margin = 0.3
+drag_right_margin = 0.15
+drag_bottom_margin = 0.1
+editor_draw_drag_margin = true
+
+[node name="PhantomCameraHost" type="Node" parent="." unique_id=1646959900]
+process_priority = 300
+process_physics_priority = 300
+script = ExtResource("1_omgnx")
+metadata/_custom_type_script = "uid://bd046eokvcnu2"
