@@ -36,7 +36,7 @@ var jump_count : int = 0
 # -------------------- STATE VARIABLES --------------------
 var was_on_floor : bool = false
 var have_dash : bool = true
-var have_double_jump : bool = false
+var have_double_jump : bool = true
 var have_down_attack : bool = false
 var max_dash : int = 1
 
@@ -129,7 +129,10 @@ func atualizar_visual():
 		States.RUN:
 			sprite.play("Run")
 		States.JUMP:
-			sprite.play("Jump")
+			if jump_count == 1:
+				sprite.play("Jump")
+			else:
+				sprite.play("Double Jump")
 		States.FALL:
 			sprite.play("Fall")
 		States.DASH:
@@ -284,6 +287,7 @@ func logic_jump(_delta):
 	processar_movimento_aereo(_delta)
 	if jump_buffer_counter > 0 and have_double_jump and jump_count < 2:
 		change_state(States.JUMP)
+		jump_count += 1
 		return
 	
 	if velocity.y >= 0:
