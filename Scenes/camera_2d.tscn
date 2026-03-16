@@ -4,7 +4,6 @@
 
 [node name="Camera2D" type="Camera2D" unique_id=686980484]
 top_level = true
-offset = Vector2(0, 25)
 zoom = Vector2(5, 5)
 limit_left = -160
 limit_top = -112
@@ -13,9 +12,9 @@ limit_bottom = 64
 drag_horizontal_enabled = true
 drag_vertical_enabled = true
 drag_left_margin = 0.15
-drag_top_margin = 0.3
+drag_top_margin = 0.0
 drag_right_margin = 0.15
-drag_bottom_margin = 0.1
+drag_bottom_margin = 0.5
 editor_draw_drag_margin = true
 
 [node name="PhantomCameraHost" type="Node" parent="." unique_id=1646959900]

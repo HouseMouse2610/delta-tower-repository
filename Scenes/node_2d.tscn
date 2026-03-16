@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://c71ccgdmbo3d" path="res://Scripts/node_2d.gd" id="1_wjtap"]
 [ext_resource type="PackedScene" uid="uid://bslu1267yjkem" path="res://Scenes/tileset_node.tscn" id="2_v1qfn"]
 [ext_resource type="PackedScene" uid="uid://ddk7urc85rqnf" path="res://Scenes/camera_2d.tscn" id="4_tx0tn"]
-[ext_resource type="AudioStream" uid="uid://cr220h17e3bkn" path="res://Assets/Sound Assets/Music Assets/Jummbox Song 9.5 Tema Completo da Tela de Título Delta Tower.ogg" id="6_tx0tn"]
+[ext_resource type="AudioStream" uid="uid://j1dr544le65" path="res://Assets/Sound Assets/Music Assets/Delta Tower Inside Tower VERSÃO DEFINITIVA.ogg" id="5_tx0tn"]
 [ext_resource type="PackedScene" uid="uid://b814d30g7uc7e" path="res://Scenes/room_area.tscn" id="6_wjtap"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tx0tn"]
@@ -28,7 +28,6 @@ position = Vector2(0, 24)
 [node name="Tileset Node" parent="." unique_id=1381621078 instance=ExtResource("2_v1qfn")]
 
 [node name="Camera2D" parent="." unique_id=686980484 instance=ExtResource("4_tx0tn")]
-offset = Vector2(0, 0)
 limit_top = -96
 limit_right = 208
 limit_bottom = 80
@@ -37,7 +36,7 @@ limit_bottom = 80
 interpolation_mode = 2
 
 [node name="Musica Provisória de Fundo" type="AudioStreamPlayer" parent="." unique_id=70563001]
-stream = ExtResource("6_tx0tn")
+stream = ExtResource("5_tx0tn")
 volume_db = -10.0
 autoplay = true
 parameters/looping = true

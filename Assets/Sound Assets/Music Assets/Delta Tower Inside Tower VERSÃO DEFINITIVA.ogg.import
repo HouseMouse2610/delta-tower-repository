@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://j1dr544le65"
+path="res://.godot/imported/Delta Tower Inside Tower VERSÃO DEFINITIVA.ogg-08b4e7034c628cb41ee92a7e97554142.oggvorbisstr"
+
+[deps]
+
+source_file="res://Assets/Sound Assets/Music Assets/Delta Tower Inside Tower VERSÃO DEFINITIVA.ogg"
+dest_files=["res://.godot/imported/Delta Tower Inside Tower VERSÃO DEFINITIVA.ogg-08b4e7034c628cb41ee92a7e97554142.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
