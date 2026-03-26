@@ -738,6 +738,15 @@ height = 14.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_it8n0"]
 size = Vector2(15, 23)
 
+[sub_resource type="Gradient" id="Gradient_pbq55"]
+offsets = PackedFloat32Array(0, 0.41558442, 1)
+colors = PackedColorArray(1, 0.25, 0.25, 1, 0.077922106, 0.077922106, 0.077922106, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_t38ji"]
+gradient = SubResource("Gradient_pbq55")
+fill = 1
+fill_from = Vector2(0.48165137, 0.49541286)
+
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=1906971917]
 script = ExtResource("1_88kja")
 
@@ -786,6 +795,9 @@ offset_right = 40.0
 offset_bottom = 23.0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 4
+
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=174819792]
+texture = SubResource("GradientTexture2D_t38ji")
 
 [connection signal="animation_finished" from="PlayerAnimation" to="." method="_on_player_animation_animation_finished"]
 [connection signal="timeout" from="AttackTimer" to="." method="_on_attack_timer_timeout"]

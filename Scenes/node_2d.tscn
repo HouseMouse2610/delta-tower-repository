@@ -7,17 +7,25 @@
 [ext_resource type="AudioStream" uid="uid://j1dr544le65" path="res://Assets/Sound Assets/Music Assets/Delta Tower Inside Tower VERSÃO DEFINITIVA.ogg" id="5_tx0tn"]
 [ext_resource type="PackedScene" uid="uid://b814d30g7uc7e" path="res://Scenes/room_area.tscn" id="6_wjtap"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_tx0tn"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2ooml"]
 resource_local_to_scene = true
 size = Vector2(368, 176)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_wjtap"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p20hg"]
 resource_local_to_scene = true
 size = Vector2(368, 208)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_v7gqg"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_he4j0"]
 resource_local_to_scene = true
 size = Vector2(624, 384)
+
+[sub_resource type="Environment" id="Environment_tx0tn"]
+background_mode = 3
+tonemap_mode = 1
+tonemap_exposure = 0.65
+glow_enabled = true
+glow_intensity = 0.4
+glow_bloom = 0.2
 
 [node name="Node2D" type="Node2D" unique_id=250771284]
 script = ExtResource("1_wjtap")
@@ -28,6 +36,7 @@ position = Vector2(0, 24)
 [node name="Tileset Node" parent="." unique_id=1381621078 instance=ExtResource("2_v1qfn")]
 
 [node name="Camera2D" parent="." unique_id=686980484 instance=ExtResource("4_tx0tn")]
+zoom = Vector2(1, 1)
 limit_top = -96
 limit_right = 208
 limit_bottom = 80
@@ -51,7 +60,7 @@ priority = 1
 
 [node name="CollisionShape2D" parent="Salas/RoomArea1" index="1" unique_id=1517324851]
 position = Vector2(24, -8)
-shape = SubResource("RectangleShape2D_tx0tn")
+shape = SubResource("RectangleShape2D_2ooml")
 
 [node name="RoomArea2" parent="Salas" unique_id=929188431 node_paths=PackedStringArray("room_pcam") instance=ExtResource("6_wjtap")]
 room_pcam = NodePath("PhantomCamera2D")
@@ -60,7 +69,7 @@ room_pcam = NodePath("PhantomCamera2D")
 
 [node name="CollisionShape2D" parent="Salas/RoomArea2" index="1" unique_id=1517324851]
 position = Vector2(24, -200)
-shape = SubResource("RectangleShape2D_wjtap")
+shape = SubResource("RectangleShape2D_p20hg")
 
 [node name="RoomArea3" parent="Salas" unique_id=592064746 node_paths=PackedStringArray("room_pcam") instance=ExtResource("6_wjtap")]
 room_pcam = NodePath("PhantomCamera2D")
@@ -69,7 +78,13 @@ room_pcam = NodePath("PhantomCamera2D")
 
 [node name="CollisionShape2D" parent="Salas/RoomArea3" index="1" unique_id=1517324851]
 position = Vector2(-472, -112)
-shape = SubResource("RectangleShape2D_v7gqg")
+shape = SubResource("RectangleShape2D_he4j0")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1082447870]
+environment = SubResource("Environment_tx0tn")
+
+[node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=797643671]
+color = Color(0.64856, 0.7152945, 0.873895, 1)
 
 [editable path="Camera2D"]
 [editable path="Salas/RoomArea1"]

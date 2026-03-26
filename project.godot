@@ -127,6 +127,7 @@ common/physics_interpolation=true
 
 textures/canvas_textures/default_texture_filter=0
 shader_compiler/shader_cache/strip_debug=true
+viewport/hdr_2d=true
 
 [xr]
 

@@ -34,7 +34,7 @@ var jump_count : int = 0
 # -------------------- STATE VARIABLES --------------------
 var was_on_floor : bool = false
 var have_dash : bool = true
-var have_double_jump : bool = true
+var have_double_jump : bool = false
 var have_down_attack : bool = false
 var max_dash : int = 1
 var COMBO_COUNTER : int = 0
@@ -119,8 +119,12 @@ func _physics_process(delta):
 
 # -------------------- FUNÇÕES DE LÓGICA --------------------
 func aplicar_squash_stretch():
+	if current_state == States.DASH:
+		sprite.scale = Vector2(1.8, 0.4)
+		create_tween().tween_property(sprite, "scale", Vector2.ONE, 0.2)
+		
 	if is_on_floor() and not was_on_floor:
-		sprite.scale = Vector2(1.15, 0.85)
+		sprite.scale = Vector2(1.5, 0.5)
 		var tween = create_tween()
 		tween.tween_property(sprite, "scale", Vector2.ONE, 0.15).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 		
@@ -130,7 +134,7 @@ func aplicar_squash_stretch():
 		sprite.scale.x = 1.0 - stretch_factor
 		
 	if is_on_ceiling():
-		sprite.scale = Vector2(1.3, 0.7)
+		sprite.scale = Vector2(1.5, 0.5)
 		create_tween().tween_property(sprite, "scale", Vector2.ONE, 0.1)
 
 func atualizar_visual():
@@ -165,9 +169,6 @@ func logica_de_dash():
 		dash_cooldown.start(0.6)
 		
 		# Efeitos Visuais e Sonoros
-		sprite.scale = Vector2(1.4, 0.8)
-		create_tween().tween_property(sprite, "scale", Vector2.ONE, 0.2)
-		
 		for i in range(12):
 			get_tree().create_timer(i * 0.03).timeout.connect(criar_rastro)
 		
@@ -272,7 +273,7 @@ func logic_idle(delta):
 		change_state(States.RUN)
 	elif input.jump:
 		change_state(States.JUMP)
-	elif input.attack:
+	elif input.attack and (is_on_floor() or air_attack_count == 0):
 		change_state(States.ATTACK)
 	elif input.dash:
 		change_state(States.DASH)
@@ -290,7 +291,7 @@ func logic_run(delta):
 		change_state(States.IDLE)
 	elif input.jump:
 		change_state(States.JUMP)
-	elif input.attack:
+	elif input.attack and (is_on_floor() or air_attack_count == 0):
 		change_state(States.ATTACK)
 	elif input.dash:
 		change_state(States.DASH)
@@ -339,8 +340,10 @@ func logic_attack(_delta):
 		velocity.x = move_toward(velocity.x, 0, FRICTION * _delta)
 		if sprite.animation == "Air Attack":
 			change_state(States.IDLE)
-	else:
-		processar_movimento_aereo(_delta)
+	if not is_on_floor():
+		if input.jump:
+			jump_buffer_counter = 0
+			processar_movimento_aereo(_delta)
 
 func processar_movimento_aereo(delta):
 	velocity.x = move_toward(velocity.x, input.dir * SPEED, ACCELERATION * delta)
